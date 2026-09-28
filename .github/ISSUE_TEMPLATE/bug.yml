@@ -1,0 +1,30 @@
+name: Difetto
+description: Segnala un comportamento riproducibile.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problema
+      description: Non inserire dati personali o credenziali.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Risultato atteso
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Riproduzione
+      description: Ambiente, ruolo e passaggi minimi.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidenze non sensibili
+      description: Log anonimizzati, screenshot o test falliti.

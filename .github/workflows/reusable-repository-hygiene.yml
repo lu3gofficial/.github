@@ -1,0 +1,39 @@
+name: Repository hygiene
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Reject runtime and secret files
+        shell: bash
+        run: |
+          set -euo pipefail
+          forbidden='^(\.env$|database/.*\.sqlite($|[-.])|vendor/|node_modules/|public/uploads/|backups/|\.runtime/)'
+          if git ls-files | grep -E "$forbidden"; then
+            echo "File runtime o riservati presenti nel repository."
+            exit 1
+          fi
+          sensitive='(^|/)(id_rsa|id_ed25519|authorized_keys|.*\.(pem|p12|pfx|key)|credentials\.json)$'
+          if git ls-files | grep -Ei "$sensitive"; then
+            echo "Possibile chiave o file credenziale presente nel repository."
+            exit 1
+          fi
+      - name: Detect common secret signatures
+        shell: bash
+        run: |
+          set -euo pipefail
+          pattern='(-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----|github_pat_[A-Za-z0-9_]{20,}|ghp_[A-Za-z0-9]{20,}|sk-proj-[A-Za-z0-9_-]{20,}|AKIA[0-9A-Z]{16})'
+          if git grep -Il -E "$pattern"; then
+            echo "Possibile segreto rilevato."
+            exit 1
+          fi

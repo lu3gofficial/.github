@@ -1,0 +1,23 @@
+name: Evoluzione
+description: Proponi una modifica con valore e criteri verificabili.
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Risultato operativo
+      description: Quale problema risolve e per chi.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criteri di accettazione
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Rischi e vincoli
+      description: Dati, permessi, compatibilita, deploy e rollback.
